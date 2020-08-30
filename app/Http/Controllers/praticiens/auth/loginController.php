@@ -19,6 +19,11 @@ class loginController extends Controller
      */
     protected $redirectTo = '/praticien/home';
 
+    public function __construct()
+    {
+        $this->middleware('guest:praticien')->except('logout');
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -46,6 +51,6 @@ class loginController extends Controller
 
         return $request->wantsJson()
             ? new Response('', 204)
-            : redirect()->route('praticien-login');
+            : redirect()->route('praticien.login');
     }
 }

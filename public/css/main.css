@@ -18029,6 +18029,73 @@ video {
   }
 }
 
+/** Tabs **/
+
+.tab-button{
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 1.125rem
+}
+
+.tab-button:hover, .tab-button.active{
+  --bg-opacity: 1;
+  background-color: #4299e1;
+  background-color: rgba(66, 153, 225, var(--bg-opacity));
+  --text-opacity: 1;
+  color: #fff;
+  color: rgba(255, 255, 255, var(--text-opacity));
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+}
+
+/** dashord content **/
+
+.dashbord-content{
+  background-color:  #fcfcfc;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  height: 100%;
+}
+
+/** custum datatable **/
+
+.dataTables_wrapper{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border-radius: 0.25rem;
+  border-width: 1px;
+}
+
+table.dataTable.no-footer{
+  margin-top: 35px;
+  border-bottom: 1px solid #111;
+}
+
+.odd{
+  background-color: #e2e8f0 !important;
+}
+
+.dataTables_wrapper .dataTables_filter [type="search"] {
+  border-width: 1px;
+  padding: 0.25rem;
+}
+
+.dataTables_wrapper .dataTables_filter [type="search"]:focus {
+  outline: 0;
+}
+
+.dataTables_wrapper .dataTables_length select {
+  background-color: transparent;
+  border-width: 1px
+}
+
 @media (min-width: 640px) {
   .sm\:space-y-0 > :not(template) ~ :not(template) {
     --space-y-reverse: 0;

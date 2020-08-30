@@ -134,3 +134,43 @@
       background: #fff;
     }
   }
+
+  /** Tabs **/
+  .tab-button{
+    @apply px-4 py-2 block w-full text-left text-lg
+  }
+
+  .tab-button:hover, .tab-button.active{
+    @apply bg-blue-500 text-white duration-500 ease-in-out 
+  }
+
+  /** dashord content **/
+  .dashbord-content{
+    background-color:  #fcfcfc;
+    @apply px-6 h-full;
+  }
+
+  /** custum datatable **/
+  .dataTables_wrapper{
+    @apply py-4 px-6 rounded border;
+  }
+
+  table.dataTable.no-footer{
+    margin-top: 35px;
+    border-bottom: 1px solid #111;
+ } 
+ .odd{
+   background-color: #e2e8f0 !important;
+ }
+
+ .dataTables_wrapper .dataTables_filter [type="search"] {
+   @apply border p-1;
+}
+
+.dataTables_wrapper .dataTables_filter [type="search"]:focus {
+  @apply outline-none;
+}
+
+.dataTables_wrapper .dataTables_length select {
+  @apply bg-transparent border
+}

@@ -15,7 +15,6 @@ class CreatePraticiensTable extends Migration
     {
         Schema::create('praticiens', function (Blueprint $table) {
             $table->id();
-            $table->string('commune_id');
             $table->string('praticien_nom', 50);
             $table->string('praticien_prenom', 225);
             $table->string('email')->unique();
@@ -28,6 +27,8 @@ class CreatePraticiensTable extends Migration
             $table->string('praticien_lieu_naissance');
             $table->string('praticien_lieu_residence');
             $table->string('praticien_telephone');
+            $table->boolean('conseil_medical')->default(false);
+            $table->boolean('suivie_patient')->default(false);
             $table->enum('praticien_status', ["BROUILLON", 'VALIDE', 'DESACTIVE']);
             $table->text('avatar')->default(null);
             $table->rememberToken();

@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-      <div class="flex flex-col lg:flex-row mb-6">
+      <div class="flex flex-col lg:flex-row mb-4">
          <div class="input-group w-full lg:w-1/2  mb-6 mr-0 lg:mr-8">
             <label for="" class="input-label"
                 :class="{'text-red-500': $v.praticien.nom.$error}">
@@ -8,6 +8,7 @@
             <input v-model.trim="$v.praticien.nom.$model"
                  type="text" 
                 :class="{'border-red-500': $v.praticien.nom.$error}" 
+                placeholder="Entrer votre nom"
                 class="form-control" id="nom" required>
             <small v-if="$v.praticien.nom.$error && !$v.praticien.nom.required"
                 :class="{'text-red-500 font-bold': $v.praticien.nom.$error}">
@@ -23,6 +24,7 @@
             <input v-model="$v.praticien.prenom.$model"
               type="text" 
               :class="{'border-red-500': $v.praticien.prenom.$error}" 
+               placeholder="Entrer votre prenom"
               class="form-control" id="prenom" require>
             <small v-if="$v.praticien.prenom.$error && !$v.praticien.prenom.required"
                 :class="{'text-red-500 font-bold': $v.praticien.prenom.$error}">
@@ -31,7 +33,7 @@
          </div>
       </div>
 
-      <div class="flex flex-col lg:flex-row mb-6">
+      <div class="flex flex-col lg:flex-row mb-4">
          <div class="input-group w-full lg:w-1/2 mb-6 mr-0 lg:mr-8">
             <label for="sexe" 
                   class="input-label"
@@ -41,6 +43,7 @@
               class="form-control bg-transparent"
               :class="{'border-red-500': $v.praticien.sexe.$error}" 
               id="sexe" required>
+                <option value="">Selectionner votre genre</option>
                 <option value="M">Masculin</option>
                 <option value="F">Feminin</option>
             </select>
@@ -58,6 +61,7 @@
             <input v-model="$v.praticien.lieu_residence.$model"
               type="text" 
               :class="{'border-red-500': $v.praticien.lieu_residence.$error}" 
+               placeholder="Entrer votre lieu de naissance"
               class="form-control" require>
             <small v-if="$v.praticien.lieu_residence.$error && !$v.praticien.lieu_residence.required"
                 :class="{'text-red-500 font-bold': $v.praticien.lieu_residence.$error}">
@@ -66,7 +70,7 @@
          </div>
       </div>
 
-      <div class="flex flex-col lg:flex-row mb-6">
+      <div class="flex flex-col lg:flex-row mb-4">
          <div class="input-group w-full lg:w-1/2 mb-6 mr-0 lg:mr-8">
             <label for="date_naissance" 
                     :class="{'text-red-500': $v.praticien.date_naissance.$error}"
@@ -90,6 +94,7 @@
             <input v-model="$v.praticien.lieu_naissance.$model"
                type="text" 
                 :class="{'border-red-500': $v.praticien.lieu_naissance.$error}" 
+                 placeholder="Entrer lieu de naissance"
                class="form-control" required>
             <small v-if="$v.praticien.lieu_naissance.$error && !$v.praticien.lieu_naissance.required"
                 :class="{'text-red-500 font-bold': $v.praticien.lieu_naissance.$error}">
@@ -98,7 +103,7 @@
          </div>
       </div>
 
-      <div class="flex flex-col lg:flex-row mb-6">
+      <div class="flex flex-col lg:flex-row mb-4">
          <div class="input-group w-full lg:w-1/2 mb-6 mr-0 lg:mr-8">
             <label for="telephone" 
                    :class="{'text-red-500': $v.praticien.telephone.$error}"
@@ -107,6 +112,7 @@
             <input v-model="$v.praticien.telephone.$model" 
                 type="text" 
                 :class="{'border-red-500': $v.praticien.telephone.$error}" 
+                 placeholder="Entrer votre numero de téléphone"
                 class="form-control" id="telephone" required>
             <small v-if="$v.praticien.telephone.$error && !$v.praticien.telephone.required"
                 :class="{'text-red-500 font-bold': $v.praticien.telephone.$error}">
@@ -126,6 +132,7 @@
             <input v-model="$v.praticien.email.$model"
                 type="email" 
                 :class="{'border-red-500': $v.praticien.email.$error}" 
+                 placeholder="Entrer votre addresse email"
                 class="form-control" id="email" required>
             <small v-if="$v.praticien.email.$error && !$v.praticien.email.required"
                 :class="{'text-red-500 font-bold': $v.praticien.email.$error}">
@@ -143,10 +150,11 @@
             <label for="presentation" 
                   :class="{'text-red-500': $v.praticien.bio.$error}"
                   class="input-label">Présentation <span class="required-input">*</span></label>
-            <input v-model="$v.praticien.bio.$model" 
+            <textarea v-model="$v.praticien.bio.$model" 
                 type="text" 
-                 :class="{'border-red-500': $v.praticien.bio.$error}" 
-                class="form-control w-full" id="presentation" required>
+                 :class="{'border-red-500': $v.praticien.bio.$error}"
+                  placeholder="Dites quelque chose à propos de vous" 
+                class="form-control w-full" id="presentation" required></textarea>
             <small v-if="$v.praticien.bio.$error && !$v.praticien.bio.required"
                 :class="{'text-red-500 font-bold': $v.praticien.bio.$error}">
                 Veuillez saisir quelque chose à propos de vous
@@ -162,6 +170,7 @@
             <input v-model="$v.praticien.password.$model" 
                 :class="{'border-red-500': $v.praticien.password.$error}" 
                 type="password" 
+                placeholder="Entrer un mot de passe"
                 class="form-control" id="password" required>
             <small v-if="$v.praticien.password.$error && !$v.praticien.password.required"
                 :class="{'text-red-500 font-bold': $v.praticien.password.$error}">
@@ -173,14 +182,15 @@
             </small>
          </div>
 
-         <div class="input-group mb-6 mr-0 lg:mr-8 w-full lg:w-1/2">
+         <div class="input-group mb-6 mr-0 w-full lg:w-1/2">
             <label for="password" 
                    :class="{'text-red-500': $v.praticien.password_confirmation.$error}"
                    class="input-label">Confirmer le mot de passe <span class="required-input">*</span></label>
             <input v-model="$v.praticien.password_confirmation.$model" 
                 :class="{'border-red-500': $v.praticien.password_confirmation.$error}" 
                 type="password" 
-                class="form-control" id="password_confirmation" required>
+                placeholder="Confirmer votre mot de passe"
+                class="form-control w-full" id="password_confirmation" required>
             <small v-if="$v.praticien.password_confirmation.$error && !$v.praticien.password_confirmation.minLength"
                 :class="{'text-red-500 font-bold': $v.praticien.password_confirmation.$error}">
                Les deux mots de passes doivent etre identiques

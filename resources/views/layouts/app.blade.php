@@ -24,10 +24,10 @@
 
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-     @yield('scripts')
+     @yield('styles')
 
 </head>
-<body class="">
+<body class="overflow-x-hidden h-screen">
     <div id="preloader">
         <div class='preloader'>
             <span></span>
@@ -38,19 +38,17 @@
             <span></span>
         </div>
     </div>
-    <div id="app">
-        {{-- <header class="header w-screen p-4 shadow h-20">
-            <nav class="container mx-auto px-8 flex items-center">
-                <span class="logo-site font-bold text-3xl">RVM</span>
-            </nav>
-        </header> --}}
-        <main>
+    <div id="app" class="h-full">
+        {{-- @include('partials.header') --}}
+        <main class="h-full">
             @yield('content')
         </main>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.min.js"></script>
     <script src="{{ asset('js/wow/dist/wow.min.js') }}" defer></script>
     <script src="{{ asset('js/init.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>

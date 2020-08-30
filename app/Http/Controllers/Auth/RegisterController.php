@@ -73,22 +73,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['praticien']['password']),
             'avatar' => 'avatar.jpg'
         ]);
-
-
-        $praticien = Praticien::create([
-            "user_id" => $user->id,
-            'commune_id' => 1,
-            'praticien_nom' => $data['praticien']['nom'],
-            'praticien_prenom' => $data['praticien']['prenom'],
-            'praticien_date_naisssance' => $data['praticien']['date_naissance'],
-            'praticien_sexe' => $data['praticien']['sexe'],
-            'praticien_numero_professionnel' => $data['praticien']['numero_ordre'],
-            'praticien_presentation' => $data['praticien']['bio'],
-            'praticien_telephone' => $data['praticien']['telephone'],
-            'praticien_lieu_residence' => $data['praticien']['lieu_residence'],
-            'praticien_lieu_naissance' => $data['praticien']['lieu_naissance'],
-            'praticien_status' => 'BROUILLON' 
-        ]);
     }
 
     public function register(Request $request)
@@ -96,8 +80,6 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
-
-        $this->guard('praticien')->login($user);
 
         if ($response = $this->registered($request, $user)) {
             return $response;

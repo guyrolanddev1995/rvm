@@ -29,7 +29,7 @@
            <tr>
               <td>
                   <select v-model="specialite_form.name" class="form-control w-full bg-transparent">
-                      <option v-for="(specialite, index) in specialites" :value="specialite.id" :key="index">{{ specialite.name }}</option>
+                      <option v-for="(specialite, index) in specialites" :value="specialite.id" :key="index">{{ specialite.nom_specialite }}</option>
                   </select>
               </td>
               <td></td>
@@ -47,7 +47,7 @@
            </thead>
            <tbody>
                <tr v-for="(specialite, index) in praticien.specialites" :key="index" class="border" :class="{'bg-gray-400 text-white': (index + 1) % 2 == 0}">
-                   <td class="p-2" width="45%">{{ specialites[specialite.name - 1].name }}</td>
+                   <td class="p-2" width="45%">{{ specialites[specialite.name].nom_specialite }}</td>
                    <td class="p-2" width="45%">{{ specialite.date }}</td>
                    <td class="p-2 text-center" width="10%">
                        <button class="bg-red-500 text-white p-1 text-center" @click="remove(specialite)">x</button>
@@ -79,24 +79,7 @@ export default {
                 name:"",
                 date:""
             },
-            specialites:[
-                {
-                    id: 1,
-                    name: "SPECIALITE 1"
-                },
-                {
-                    id: 2,
-                    name: "SPECIALITE 2"
-                },
-                {
-                    id: 3,
-                    name: "SPECIALITE 3"
-                },
-                {
-                    id: 4,
-                    name: "SPECIALITE 1"
-                }
-            ]
+            specialites: null
         }
     },
     methods: {
@@ -131,6 +114,13 @@ export default {
                 return this.$emit('validate-specialite', false)
             }
         },
+
+        getSpecialites(){
+            axios.get('/praticien/get-specialites')
+                 .then((response) => {
+                     this.specialites = response.data.specialites
+                 })
+        }
     },
     validations:{
        praticien:{
@@ -161,6 +151,7 @@ export default {
        }
     },
     mounted() {
+       this.getSpecialites()
        this.$emit('can-continue-step-2', {
           'error': this.$v.$anyError,
           'invalid': this.$v.$invalid

@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Praticien;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,16 +11,16 @@ class VerifyPraticienAccount extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $praticien;
+    public $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Praticien $praticien)
+    public function __construct(Array $data)
     {
-        $this->praticien = $praticien;
+        $this->data = $data;
     }
 
     /**

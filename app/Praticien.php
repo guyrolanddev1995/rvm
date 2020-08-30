@@ -15,12 +15,9 @@ class Praticien extends Authenticatable implements HasMedia
     use InteractsWithMedia;
     
     protected $fillable = [
-        'user_id',
-        'commune_id',
         'praticien_nom',
         'praticien_prenom',
         'email',
-        'verified',
         'praticien_date_naissance',
         'praticien_sexe',
         'praticien_numero_professionnel',
@@ -30,16 +27,18 @@ class Praticien extends Authenticatable implements HasMedia
         'praticien_lieu_residence',
         'password',
         'avatar',
-        'praticien_status'
+        'praticien_status',
+        'conseil_medical',
+        'suivie_patient'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    public function verifyPraticien()
+    public function verifyEmail()
     {
-        return $this->hasOne(verifyPraticienEmail::class, 'praticien_id');
+        $this->morphOne(verifyEmail::class, 'verifyEmailable');
     }
 
     public function commune()

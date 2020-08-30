@@ -5,6 +5,8 @@ namespace App\Http\Controllers\praticiens\auth;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyPraticienAccount;
 use App\Praticien;
+use App\Repositories\BaseRepository;
+use App\Traits\UploadFile;
 use App\verifyPraticienEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -15,185 +17,174 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
+    use UploadFile;
+
+    protected $baseRepository;
+    
+
      /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(BaseRepository $baseRepository)
     {
-        $this->middleware('guest');
+        $this->middleware('guest:praticien');
+
+        $this->baseRepository = $baseRepository;
     }
 
-    public function register_form()
+    public function registerForm()
     {
-        return view('praticien.register');
+        return view('praticien.auth.register.step1');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+    public function storeForm(Request $request)
     {
-
-        $validator =  Validator::make($data['praticien'], [
+        $this->validate($request, [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'nom' => ['required', 'min:2'],
             'prenom' => ['required'],
             'sexe' => ['required'],
             'lieu_naissance' => ['required'],
-            'date_naissance' => ['required'],
-            'telephone' => ['required', 'numeric'],
-            'bio' => ['required'],
-            'numero_ordre' => ['required', 'min:8']
+            'lieu_residence' => ['required'],
+            'date_naissance' => ['required', 'date'],
+            'phone' => ['required', 'numeric'],
+            'presentation' => ['required'],
         ]);
 
-        return $validator;
+        $request->session()->put('praticien', $request->except('_token'));
+
+        return redirect()->route('praticien.register.form2');
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create(array $data)
+    public function registerForm2()
     {
-        $praticien = [];
-
-        try {
-            $query = DB::transaction(function () use ($data, $praticien) {
-                $praticien = Praticien::create([
-                    'email' => $data['praticien']['email'],
-                    'password' => Hash::make($data['praticien']['password']),
-                    'avatar' => $data['praticien']['profile_file'] ?? '',
-                    'commune_id' => 1,
-                    'praticien_nom' => $data['praticien']['nom'],
-                    'praticien_prenom' => $data['praticien']['prenom'],
-                    'praticien_date_naissance' => $data['praticien']['date_naissance'],
-                    'praticien_sexe' => $data['praticien']['sexe'],
-                    'praticien_numero_professionnel' => $data['praticien']['numero_ordre'],
-                    'praticien_presentation' => $data['praticien']['bio'],
-                    'praticien_telephone' => $data['praticien']['telephone'],
-                    'praticien_lieu_residence' => $data['praticien']['lieu_residence'],
-                    'praticien_lieu_naissance' => $data['praticien']['lieu_naissance'],
-                    'praticien_status' => 'BROUILLON' 
-                ]);
-
-                foreach($data['praticien']['specialites'] as $specialite){
-                    $praticien->specialites()->sync([
-                        $specialite['name'] => [
-                            'specialite_praticien_date_debut' => $specialite['date'],
-                        ]
-                    ]);
-    
-                }
-    
-                foreach($data['praticien']['structures'] as $structure){
-                    $praticien->structures()->sync([
-                        $structure['name'] => [
-                            'structure_praticien_date_debut' => $structure['date'],
-                        ]
-                    ]);
-                }
-    
-                $verifyPraticien = verifyPraticienEmail::create([
-                    'praticien_id' => $praticien->id,
-                    'token' => sha1(time())
-                ]);
-    
-                return $praticien;
-            });
-
-        } catch (\Exception $e) {
-            return false;
-        }
-          
-        if($query != []){
-            $this->sendEmailVerification($query);
-        }
-        else{
-            return false;
-        }
-
-        return true;    
+        $specialites = $this->baseRepository->getSpecialites();
+        return view('praticien.auth.register.step2', compact('specialites'));
     }
 
-    public function sendEmailVerification($praticien)
+    public function storeForm2(Request $request)
     {
-        Mail::to($praticien->email)->send(new VerifyPraticienAccount($praticien));
+       
+        $this->validate($request, [
+            'num_ordre' => ['required', 'min:8'],
+            'specialite' => ['required', 'array', 'min:1'],
+            'date_exercice' => ['required', 'array', 'min:1'],
+        ]);
+
+        if($request->session()->exists('praticien.step')){
+            $request->session()->forget('praticien.step');
+        }
+
+        $request->session()->push('praticien.step', $request->except('_token'));
+
+        return redirect()->route('praticien.register.form3');
+    }
+
+
+    public function registerForm3()
+    {
+        return view('praticien.auth.register.step3');
+    }
+
+    public function storeForm3(Request $request)
+    {
+       
+        $file = $this->uploadOneFile($request);
+
+        if($request->session()->exists('praticien.step1')){
+            $request->session()->forget('praticien.step1');
+        }
+
+        $request->session()->push('praticien.step1', $file);
+
+        return redirect()->route('praticien.register.form4');
+    }
+
+    public function registerForm4()
+    {
+        return view('praticien.auth.register.step4');
+    }
+
+    public function storeForm4(Request $request)
+    {
+       
+        if($request->session()->exists('praticien.step3')){
+            $request->session()->forget('praticien.step3');
+        }
+
+        $collection = collect($request->except('_token'));
+        $conseil_medical = $collection->has('conseil_medical') ? $request->conseil_medical : null;
+        $suivie_patient = $collection->has('suivie_patient') ? $request->suivie_patient : null;
+       
+        $merge = $collection->merge(compact('conseil_medical', 'suivie_patient'));
+
+        $request->session()->push('praticien.step3', $merge->toArray());
+
+        return redirect()->route('praticien.register.form5');
+    }
+
+    public function registerForm5()
+    {
+        $praticien = session('praticien');
+        $specialites = $this->baseRepository->getSpecialites();
+        return view('praticien.auth.register.step5', compact('praticien', 'specialites'));
+    }
+
+    public function storeForm5()
+    {
+        $data = session('praticien');
+        
+        $praticien = Praticien::create([
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'avatar' => $data['step1'][0] ?? '',
+            'praticien_nom' => $data['nom'],
+            'praticien_prenom' => $data['prenom'],
+            'praticien_date_naissance' => $data['date_naissance'],
+            'praticien_sexe' => $data['sexe'],
+            'praticien_numero_professionnel' => $data['step'][0]['num_ordre'],
+            'praticien_presentation' => $data['presentation'],
+            'praticien_telephone' => $data['phone'],
+            'praticien_lieu_residence' => $data['lieu_residence'],
+            'praticien_lieu_naissance' => $data['lieu_naissance'],
+            'conseil_medical' => $data['step3'][0]['conseil_medical'] == 'on' ? true : false,
+            'suivie_patient' => $data['step3'][0]['suivie_patient'] == 'on' ? true : false,
+            'praticien_status' => 'BROUILLON' 
+        ]);
+
+        return $praticien;
     }
 
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        
+        $user = $this->storeForm5();
 
-        event(new Registered($user = $this->create($request->all())));
-
-        if ($response = $this->registered($request, $user)) {
-            return $response;
-        }
-
-        return response()->json([
-            'success' => 1
-        ]);
-    }
-
-    /**
-     * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function registered(Request $request, $user)
-    {
-        //
-    }
-
-    public function verifyAccount($token)
-    {
-        $verifyToken = verifyPraticienEmail::where('token', $token)->first();
-        if($verifyToken){
-            $praticien = $verifyToken->praticien;
-
-            if(!$praticien->verified){
-                $verifyToken->praticien->verified = 1;
-                $verifyToken->praticien->save();
-                
-                return redirect()->route('praticien-login')->with('success', 'Votre E-mail a été verifié . Connectez-vous à présent');
+        if($user){
+            if($request->session()->exists('praticien')){
+                $request->session()->forget('praticien');
+                return redirect()->route('success-page');
             }
-            else{
-               return redirect()->route('praticien-login')->with('success', 'Votre E-mail a déjà été vérfié, connectez-vous à présent');
-            }
-        }
-        else{
-           
-           return redirect()->route('praticien-login')->with('error', 'Impossible de valider votre email');
-        }
-
+        } 
     }
 
     public function uploadOneFile(Request $request){
 
         $validator = Validator::make($request->all(),[
-            'file'  =>  'image|mimes:jpeg,png,gif,jpg|max:2048'
+            'photo'  =>  'image|mimes:jpeg,png,gif,jpg|max:1024'
         ]);
 
         if ($validator->fails()) {
            return response()->json(['errors'=>$validator->errors()]);
         }
 
-        $file = $request->file('file');
-        $name = basename($file->storePublicly('praticiens/profiles', ['disk' => 'public']));
+        $file = $request->file('photo');
+
+        $name = $this->uploadOne($file, 'praticiens/profiles');
  
-        return response()->json([
-            'success' => true,
-            'name' => $name
-        ]);
+        return  $name;
     }
 }

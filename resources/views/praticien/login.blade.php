@@ -1,20 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-   <div class="w-screen h-screen">
+@include('partials.header')
+   <div class="w-screen h-screen" style="background-color: #ADD8E6">
        <div class="flex flex-row">
           <div class="w-1/2 h-screen pt-16">
-            <img src="{{ asset('images/doctor.svg') }}" alt="" class="wow bounceIn" data-wow-delay=".5s" data-wow-duration=".9s">
+            <img src="{{ asset('images/doctor_b.svg') }}" alt="" class="wow bounceIn" data-wow-delay=".5s" data-wow-duration=".9s">
           </div>
           <div class="w-1/2 h-screen">
               <div class="form-container flex flex-col items-center justify-center w-auto h-full">
-                 <div class="card-form shadow-md p-4 w-2/3 wow fadeIn" data-wow-delay=".7s" data-wow-duration="1s">
+                 <div class="card-form bg-white shadow border p-4 w-2/3 wow fadeIn" data-wow-delay=".7s" data-wow-duration="1s">
                      <div class="card-header text-center">
                         <h1 class="text-3xl font-bold text-gray-800 mb-1">Bienvenue</h1>
                         <h2 class="text-md font-semibold text-gray-700">Connectez-vous</h2>
                      </div>
                      
-                     <form action="{{ route('praticien-login') }}" method="post" class="mt-10">
+                     <form action="{{ route('praticien.login') }}" method="post" class="mt-10">
                         @csrf
                         <div class="mb-6">
                             <label for="email" class="font-semibold text-md text-gray-900">Addresse E-mail</label>
@@ -46,7 +47,8 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-primary mt-6 mb-4">Se connecter</button>
+                        <button type="submit" class="btn-primary mt-6 mb-4">Se connecter</button> <br>
+                        <small>Vous n'avez pas de compte? cliquer <a href="{{ route('praticien.register.form') }}" class="text-blue-600"> ici</a></small>
                      </form>
                  </div>
               </div>

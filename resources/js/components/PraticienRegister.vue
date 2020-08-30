@@ -1,41 +1,53 @@
 <template>
-    <div class="register-container w-full mx-4 lg:w-2/3 lg:mx-auto h-64 border-t-4 border-blue-600 my-10">
-      <div class="card w-full shadow-md rounded py-2">
-         <div class="card-header border-b border-gray-200 px-4 py-2 flex items-center">
-             <h1 class="text-xl font-bold text-gray-700 uppercase">creation de compte praticien</h1>
-         </div>
-         <div class="card-main px-4 py-4">
-            <ol class="step-indicator">
-             <li v-for='(step, index) in steps' :key="index">
-                <div :class="{'active': step.id == currentStep, 'complete': step.id < currentStep}">
-                  <div class="step">{{ index + 1}}</div>
-                  <div class="caption hidden-xs hidden-sm">Step <span v-text="step.id"></span>: <span v-text="step.title"></span></div>
+    <div class="w-screen h-full flex items-center overflow-hidden" style="background-color: #ADD8E6">
+        <div class="container mx-auto px-16 flex flex-col justify-center">
+            <div class="flex h-full register-card shadow rounded border">
+                <div class="w-2/5 image-cover border-transparent bg-blue-700" :style="{backgroundImage: 'url(/images/nurse.jpg)'}">
                 </div>
-             </li>
-           </ol>
+                <div class="w-3/5 bg-white overflow-y-auto">
+                    <div class="form-container flex flex-col justify-center w-full">
+                        <div class="card w-full h-full rounded py-2">
+                            <div class="card-header border-b border-gray-200 px-4 py-2 flex justify-between items-center">
+                                <h1 class="text-lg font-bold text-gray-800 uppercase">creation de compte praticien</h1>
+                                <a :href="login" class="text-blue-600">Se connecter</a>
+                            </div>
+                            <div class="card-main txt-sm px-4 py-4">
+                                <ol class="step-indicator">
+                                <li v-for='(step, index) in steps' :key="index">
+                                    <div :class="{'active': step.id == currentStep, 'complete': step.id < currentStep}">
+                                    <div class="step">{{ index + 1}}</div>
+                                    <div class="caption hidden-xs hidden-sm">Step <span v-text="step.id"></span>: <span v-text="step.title"></span></div>
+                                    </div>
+                                </li>
+                            </ol>
 
-           <div class="px-8 pt-12">
-              <InfoPerson v-show="currentStep == 1" :praticien="praticien" @can-continue="validate1"/>
-              <Specialite v-show="currentStep == 2" :praticien="praticien" @can-continue-step-2="validate2" @validate-specialite="validateSpecialite"/>
-              <Document v-show="currentStep == 3" :praticien="praticien"/>
-              <Structure v-show="currentStep == 4" :praticien="praticien" @validate-structure="validateStructure"/>
-           </div>
-         </div>
-         <div class="card-footer px-12">
-             <div class="step-wrapper" :class="stepWrapperClass">
-                <button type="button" class="btn-primary mr-2" v-show=" !firststep" @click="lastStep" :disabled="firststep">
-                    Retour
-                </button>
-                <button type="button" class="mr-2 btn-primary" v-show=" !laststep" @click.prevent="nextStep" :disabled="laststep">
-                    Continuer
-                </button>
-                <button type="submit" class="btn-primary" v-if="laststep" @click="send">
-                    S'enregisrer
-                </button>
+                            <div class="px-8 pt-12">
+                                <InfoPerson v-show="currentStep == 1" :praticien="praticien" @can-continue="validate1"/>
+                                <Specialite v-show="currentStep == 2" :praticien="praticien" @can-continue-step-2="validate2" @validate-specialite="validateSpecialite"/>
+                                <Document v-show="currentStep == 3" :praticien="praticien"/>
+                                <Structure v-show="currentStep == 4" :praticien="praticien" @validate-structure="validateStructure"/>
+                            </div>
+                            </div>
+                            <div class="card-footer px-12">
+                                <div class="step-wrapper" :class="stepWrapperClass">
+                                    <button type="button" class="btn-primary mr-2" v-show=" !firststep" @click="lastStep" :disabled="firststep">
+                                        Retour
+                                    </button>
+                                    <button type="button" class="mr-2 btn-primary" v-show=" !laststep" @click.prevent="nextStep" :disabled="laststep">
+                                        Continuer
+                                    </button>
+                                    <button type="submit" class="btn-primary" v-if="laststep" @click="send">
+                                        S'enregisrer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-         </div>
-      </div>
-  </div>
+        </div>
+   </div>
+   
 </template>
 
 <script>
@@ -43,8 +55,13 @@
     import Specialite from './Register/Praticien/Specialite.vue'
     import Document from './Register/Praticien/Document.vue'
     import Structure from './Register/Praticien/Structure.vue'
-
     export default {
+        props:{
+            login:{
+                type: String
+            }
+        }
+        ,
         components:{
             InfoPerson,
             Specialite,
@@ -57,10 +74,8 @@
             invalid2: false,
             invalid3: false,
             invalid4: false,
-
             validSrtuct: false,
             valideSpec: false,
-
             praticien:{
                 nom: '',
                 prenom:'',
@@ -75,10 +90,8 @@
                 password_confirmation: '',
                 numero_ordre:'',
                 profile_file:'',
-                docs_files: [],
                 specialites: [],
-                structures: []
-
+                
             },
             currentStep: 1,
             steps:[
@@ -94,7 +107,7 @@
                 },
                 {
                     id: 3,
-                    title: "Documents",
+                    title: "Profile",
                     icon_class: "fa fa-paper-plane"
                 },
                 {
@@ -108,7 +121,6 @@
                     icon_class: "fa fa-paper-plane"
                 }
             ],
-
             errors: [],
             }
         },
@@ -116,35 +128,29 @@
             active(){
             return this.steps[this.currentStep - 1].id == this.currentStep
             },
-
             firststep(){
             return this.currentStep == 1;
             },
-
             laststep(){
               return this.currentStep == this.steps.length
             },
-
             stepWrappperClass(){
             return{
                 active: this.active
             }
             },
-
             indicatorclass(){
             return{
                 active: this.steps[this.currentStep - 1].id == this.currentStep,
                 complete: this.currentStep > this.steps[this.currentStep - 1].id
             }
             },
-
             stepWrapperClass(){
             return{
                 active: this.active
             }
             }
         },
-
         methods:{
             nextStep(){
                 if(this.currentStep == 1){
@@ -167,61 +173,45 @@
                          return false;
                      }
                 }
-
                 if(this.currentStep == 3){
-                     
+
                      if(this.praticien.profile_file == '' ||  this.praticien.profile_file == null){
                          return false
                      }
                      
                     this.currentStep += 1
                 }
-
                 if(this.currentStep == 4){
-                     
-                     if(this.validSrtuct){
-                         this.currentStep += 1
-                     }
-                     else{
-                         return false;
-                     }
+                    this.currentStep += 1
                 }
             }, 
-
             lastStep(){
                 console.log('current-step:'+ this.currentStep)
                 this.currentStep -= 1;
                 console.log('prev-step:' + this.currentStep)
             },
-
             validate1(value){
                  this.invalid1 = value.invalid
             },
             validate2(value){
                this.invalid2 = value.invalid
             },
-
             validate4(value){
                this.invalid4 = value.invalid
             },
-
             validateSpecialite(value){
                 this.valideSpec = value
             },
-
-            validateStructure(value){
-                this.validSrtuct = value
-                console.log('valide structure: ' + this.validSrtuct)
-            },
-
+        
             send(){
                 if(this.praticien != {}){
-                    axios.post('/praticien/regsiter', {
+                    axios.post('/praticien/register', {
                         praticien: this.praticien
                     })
                     .then((response) => {
-                       if(response.data.success == true){
-                           window.location.href = '/praticien/success'
+                     console.log(response.data)
+                       if(response.data.success == 1){
+                           window.location.href = '/praticien/register/success'
                        }
                        else{
                            this.notify('Erreur interne du serveur', 'error')
@@ -238,7 +228,6 @@
                     })
                 }
             },
-
             notify(message, title){
                 this.$toast.error({
                     title:'Error',
@@ -258,17 +247,13 @@ $wizard-color-active: #4183D7 !default;
 $wizard-color-complete: #87D37C !default;
 $wizard-step-width-height: 55px !default;
 $wizard-step-font-size: 18px !default;
-
 @import 'https://fonts.googleapis.com/css?family=Roboto';
-
-
 body {
     padding: 0;
     margin: 0;
     background-color: #fff;
     font-family: 'Roboto', sans-serif;
 }
-
 .step-wrapper {
     padding: 20px 0;
     display: none;
@@ -277,9 +262,6 @@ body {
         display: block;
     }
 }
-
-
-
 .step-indicator {
     border-collapse: separate;
     display: table;
@@ -330,7 +312,6 @@ body {
           color: $wizard-color-active;
       }
     }
-
     .invalid {
       .step {
         border-color: red;
@@ -341,7 +322,6 @@ body {
           color: red;
       }
     }
-
     
         
     .complete {

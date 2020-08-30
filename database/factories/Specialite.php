@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Specialite::class, function (Faker $faker) {
     return [
-        'specialite_nom' => $faker->name()
+        'nom' => $faker->name()
     ];
 });

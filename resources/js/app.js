@@ -1,16 +1,15 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-
-require('./bootstrap');
-
 
 window.Vue = require('vue');
 
+window.axios = require('axios');
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 
 Vue.component('praticien-register', require('./components/PraticienRegister.vue').default);
+Vue.component('rdv-consultation', require('./components/RdvConsultation.vue').default);
+Vue.component('structure-consultations', require('./components/Structure/Consultations.vue').default);
+Vue.component('structure-notifications', require('./components/Structure/Notifications').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

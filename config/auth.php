@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'patient',
         'passwords' => 'users',
     ],
 
@@ -36,20 +36,25 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'patient' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'patients',
         ],
 
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-            'hash' => false,
-        ],
+        // 'api' => [
+        //     'driver' => 'token',
+        //     'provider' => 'users',
+        //     'hash' => false,
+        // ],
         
         'praticien' => [
             'driver' => 'session',
             'provider' => 'praticiens',
+        ],
+
+        'structure' => [
+            'driver' => 'session',
+            'provider' => 'structures',
         ]
     ],
 
@@ -71,14 +76,19 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'patients' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Patient::class
         ],
 
         'praticiens' => [
             'driver' => 'eloquent',
             'model' => App\Praticien::class,
+        ],
+
+        'structures' => [
+            'driver' => 'eloquent',
+            'model' => App\Structure::class,
         ],
 
         // 'users' => [
@@ -103,15 +113,15 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'patients' => [
+            'provider' => 'patients',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
 
         'praticiens' => [
-            'provider' => 'users',
+            'provider' => 'praticiens',
             'table' => 'password_resets',
             'expire' => 60,
         ],

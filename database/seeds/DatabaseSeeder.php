@@ -1,5 +1,6 @@
 <?php
 
+use App\Praticien;
 use App\Specialite;
 use App\Structure;
 use Illuminate\Database\Seeder;
@@ -13,7 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Structure::class, 10)->create();
-        factory(Specialite::class, 10)->create();
+        factory(Praticien::class, 50)->create();
+        
+        $this->call([
+            ExamenTableSeeder::class,
+            SpecialiteTableSeeder::class,
+            TypeStructureTableSeed::class,
+            VilleTableSeeder::class
+        ]);
+        
     }
 }

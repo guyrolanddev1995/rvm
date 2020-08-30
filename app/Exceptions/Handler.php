@@ -68,13 +68,19 @@ class Handler extends ExceptionHandler
 
         $guard = Arr::get($exception->guards(), 0);
 
+        
         switch($guard){
             case 'praticien':
-                $login = 'praticien-login';
+                $login = 'praticien.login.form';
                 break;
-            default:
-                $login = 'login';
+            case 'structure':
+                $login = 'structure.login.form';
                 break;
+
+            case 'patient':
+                $login = 'patient.login.form';
+                break;
+                
         }
         return redirect()->guest(route($login));
     }

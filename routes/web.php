@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('main-home');
+Route::view('rvm', 'welcome')->name('main-home');
 
-Route::get('/home', 'HomeController@index')->name('home');
-
+require 'patient.php';
 require 'praticien.php';
+require 'structure.php';
+require 'admin.php';
