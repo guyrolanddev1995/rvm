@@ -26,7 +26,7 @@
     "dependencies": {
         "animate.css": "^4.1.0",
         "cxlt-vue2-toastr": "^1.1.1",
-        "datatables.net": "^1.10.21",
+        "datatables.net": "^1.11.3",
         "datatables.net-dt": "^1.10.21",
         "moment": "^2.27.0",
         "tailwindcss": "^1.4.6",
