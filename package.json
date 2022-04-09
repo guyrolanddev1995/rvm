@@ -28,7 +28,7 @@
         "cxlt-vue2-toastr": "^1.1.1",
         "datatables.net": "^1.10.21",
         "datatables.net-dt": "^1.10.21",
-        "moment": "^2.27.0",
+        "moment": "^2.29.2",
         "tailwindcss": "^1.4.6",
         "vue2-dropzone": "^3.6.0",
         "vuelidate": "^0.7.5",
